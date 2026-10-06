@@ -1,0 +1,31 @@
+// Copia aquí todos los comandos que has usado para crear la base de datos.
+
+//Para la creacion de las tablas de la base de datos
+//La database la cree utilizando las propias opciones de phpMyAdmin 
+
+CREATE TABLE solicitantes (
+    id INT AUTO_INCREMENT PRIMARY KEY, 
+    nombre VARCHAR(50) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    dni VARCHAR(9) NOT NULL UNIQUE,
+    f_nac DATE NOT NULL,
+    tlf VARCHAR(15),
+    email VARCHAR(100) NOT NULL UNIQUE,
+    profesion VARCHAR(100) NOT NULL,
+    jornada_parcial BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE TABLE idiomas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_idioma VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE solicitante_idiomas (
+    solicitante_id INT NOT NULL,
+    idioma_id INT NOT NULL,
+    nivel VARCHAR(20) DEFAULT 'Intermedio',
+    PRIMARY KEY (solicitante_id, idioma_id),
+    FOREIGN KEY (solicitante_id) REFERENCES solicitantes(id) ON DELETE CASCADE,
+    FOREIGN KEY (idioma_id) REFERENCES idiomas(id) ON DELETE CASCADE
+);
+
