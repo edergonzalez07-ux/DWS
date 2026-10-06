@@ -44,22 +44,16 @@
                 Solicito jornada parcial
             </label>
 
-            <!-- Permite elegir un idioma o indicar que conoce ambos, con su nivel. -->
+            <!-- Permite indicar si conoce Euskera, Inglés, ambos o ningún idioma. -->
             <fieldset class="idiomas">
                 <legend>Idiomas</legend>
                 <label for="idioma">Idiomas que conoces</label>
                 <select id="idioma" name="idioma" required>
                     <option value="">Selecciona una opción</option>
+                    <option value="ninguno">Ninguno</option>
                     <option value="euskera">Euskera</option>
                     <option value="ingles">Inglés</option>
                     <option value="ambos">Ambos</option>
-                </select>
-                <label for="nivel">Nivel de los idiomas seleccionados</label>
-                <select id="nivel" name="nivel">
-                    <option value="Básico">Básico</option>
-                    <option value="Intermedio" selected>Intermedio</option>
-                    <option value="Avanzado">Avanzado</option>
-                    <option value="Nativo">Nativo</option>
                 </select>
             </fieldset>
 

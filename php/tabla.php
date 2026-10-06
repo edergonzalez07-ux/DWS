@@ -32,8 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $jornadaParcial = isset($_POST['jornada_parcial']) ? 1 : 0;
     $idiomaSeleccionado = $_POST['idioma'] ?? '';
-    $nivel = $_POST['nivel'] ?? 'Intermedio';
-    $nivelesPermitidos = ['Básico', 'Intermedio', 'Avanzado', 'Nativo'];
     $fechaValida = DateTime::createFromFormat('!Y-m-d', $fechaNacimiento);
     $error = '';
 
@@ -47,10 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Introduce un correo electrónico válido.';
     } elseif (strlen($telefono) > 15) {
         $error = 'El teléfono no puede superar los 15 caracteres.';
-    } elseif (!in_array($idiomaSeleccionado, ['euskera', 'ingles', 'ambos'], true)) {
-        $error = 'Selecciona Euskera, Inglés o Ambos.';
-    } elseif (!in_array($nivel, $nivelesPermitidos, true)) {
-        $error = 'El nivel de idioma seleccionado no es válido.';
+    } elseif (!in_array($idiomaSeleccionado, ['ninguno', 'euskera', 'ingles', 'ambos'], true)) {
+        $error = 'Selecciona Ninguno, Euskera, Inglés o Ambos.';
     }
 
     if ($error !== '') {
@@ -62,7 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $conexion = new mysqli($servidor, $usuario, $contrasena_bd, $base_datos, $puerto);
             $conexion->set_charset('utf8mb4');
 
-            if ($idiomaSeleccionado === 'euskera') {
+            if ($idiomaSeleccionado === 'ninguno') {
+                $idiomaGuardado = 'Ninguno';
+            } elseif ($idiomaSeleccionado === 'euskera') {
                 $idiomaGuardado = 'Euskera';
             } elseif ($idiomaSeleccionado === 'ingles') {
                 $idiomaGuardado = 'Inglés';
@@ -82,13 +80,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $conexion->real_escape_string($email);
             $profesion = $conexion->real_escape_string($profesion);
             $idiomaGuardado = $conexion->real_escape_string($idiomaGuardado);
-            $nivel = $conexion->real_escape_string($nivel);
 
             $telefonoSQL = $telefono !== '' ? "'$telefono'" : 'NULL';
             $conexion->query("INSERT INTO solicitantes
-                (nombre, apellidos, dni, f_nac, tlf, email, profesion, jornada_parcial, idioma, nivel_idioma)
+                (nombre, apellidos, dni, f_nac, tlf, email, profesion, jornada_parcial, idioma)
                 VALUES ('$nombre', '$apellidos', '$dni', '$fechaNacimiento', $telefonoSQL,
-                '$email', '$profesion', $jornadaParcial, '$idiomaGuardado', '$nivel')");
+                '$email', '$profesion', $jornadaParcial, '$idiomaGuardado')");
             $conexion->commit();
             $transaccionIniciada = false;
             $conexion->close();
@@ -146,8 +143,8 @@ if (!isset($profesiones[$tipo])) {
         $conexion->set_charset('utf8mb4');
         $profesionEscapada = $conexion->real_escape_string($profesion);
         $resultadoSolicitudes = $conexion->query(
-            "SELECT s.id, s.nombre, s.apellidos, s.dni, s.f_nac, s.tlf, s.email, s.profesion,
-                s.jornada_parcial, s.idioma, s.nivel_idioma
+                "SELECT s.id, s.nombre, s.apellidos, s.dni, s.f_nac, s.tlf, s.email, s.profesion,
+                    s.jornada_parcial, s.idioma
              FROM solicitantes s
              WHERE s.profesion = '$profesionEscapada'
              GROUP BY s.id
@@ -199,7 +196,6 @@ if (!isset($profesiones[$tipo])) {
                     <th>Profesión</th>
                     <th>Jornada parcial</th>
                     <th>Idioma</th>
-                    <th>Nivel</th>
                 </tr>
             </thead>
             <tbody>
@@ -213,7 +209,6 @@ if (!isset($profesiones[$tipo])) {
                         <td><?= escaparHTML($solicitud['profesion']) ?></td>
                         <td><?= $solicitud['jornada_parcial'] ? 'Sí' : 'No' ?></td>
                         <td><?= escaparHTML($solicitud['idioma'] ?? '') ?></td>
-                        <td><?= escaparHTML($solicitud['nivel_idioma'] ?? '') ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
