@@ -1,7 +1,10 @@
 // Copia aquí todos los comandos que has usado para crear la base de datos.
 
+//Para la creacion de la database
+
+CREATE DATABASE Examen;
+
 //Para la creacion de las tablas de la base de datos
-//La database la cree utilizando las propias opciones de phpMyAdmin 
 
 CREATE TABLE solicitantes (
     id INT AUTO_INCREMENT PRIMARY KEY, 
@@ -19,13 +22,12 @@ CREATE TABLE idiomas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre_idioma VARCHAR(50) NOT NULL UNIQUE
 );
+//Ya que solo se puede o euskera o ingles
+ALTER TABLE idiomas
+ADD CONSTRAINT chk_nombre_idioma CHECK (nombre_idioma IN ('Euskera', 'Inglés'));
 
-CREATE TABLE solicitante_idiomas (
-    solicitante_id INT NOT NULL,
-    idioma_id INT NOT NULL,
-    nivel VARCHAR(20) DEFAULT 'Intermedio',
-    PRIMARY KEY (solicitante_id, idioma_id),
-    FOREIGN KEY (solicitante_id) REFERENCES solicitantes(id) ON DELETE CASCADE,
-    FOREIGN KEY (idioma_id) REFERENCES idiomas(id) ON DELETE CASCADE
-);
+INSERT INTO idiomas (nombre_idioma) VALUES ('Euskera'), ('Inglés');
 
+ALTER TABLE solicitantes
+ADD COLUMN idioma VARCHAR(30) NULL,
+ADD COLUMN nivel_idioma VARCHAR(20) NULL;

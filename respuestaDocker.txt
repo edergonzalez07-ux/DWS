@@ -1,4 +1,9 @@
 // Responde a la pregunta sobre docker del enunciado
+Docker run es la opcion para correr un container nuevo, luego el -d es para que lo haga en detached mode(en el background).
+--name mi_web es para poder darle el nombre al container.
+Luego, -p es el puerto que queremos utilizar el 8080:80, esta segunda parte es en el puerto que as a escuchar con nginx
+Y nginx es la imagen del propio docker sacado de docker hub
 
-
-// Bibiografía
+// Bibliografía
+https://docs.docker.com/reference/cli/docker/container/run/
+http://docs.docker.com/engine/containers/run/

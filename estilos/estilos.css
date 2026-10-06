@@ -39,7 +39,7 @@ label {
     margin-bottom: 6px;
 }
 
-input, select, textarea {
+input:not([type="checkbox"]):not([type="radio"]), select, textarea {
     width: 100%;
     box-sizing: border-box;
     padding: 10px;
@@ -50,7 +50,7 @@ input, select, textarea {
     font-size: 15px;
 }
 
-input:focus, select:focus, textarea:focus {
+input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:focus {
     outline: none;
     border-color: #ec407a;
     background-color: #ffffff;
@@ -102,4 +102,38 @@ tr:nth-child(even) {
 } 
 tr:nth-child(odd) { 
     background-color: white; 
-} 
+}
+
+.opcion-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: normal;
+}
+
+.opcion-check input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.idiomas {
+    margin-top: 20px;
+    border: 1px solid #f8bbd0;
+    border-radius: 6px;
+}
+
+@media (max-width: 700px) {
+    body {
+        padding: 16px;
+    }
+
+    form {
+        padding: 20px;
+    }
+
+    table {
+        width: 100%;
+        display: block;
+        overflow-x: auto;
+    }
+}
