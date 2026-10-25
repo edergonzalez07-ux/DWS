@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Números Primos</title>
+
+</head>
+<body>
+  <h1>Generador de Números Primos</h1>
+  
+  <label for="numeroInput">Introduce un número:</label>
+  <input type="number" id="numeroInput" min="1" placeholder="Ej: 7">
+  <button onclick="calcularPrimos()">Mostrar Primos</button>
+
+  <div id="resultado"></div>
+
+  <script>
+
+    function esPrimo(num) {
+      if (num <= 1) return false;
+      for (let i = 2; i <= Math.sqrt(num); i++) {
+        if (num % i === 0) return false;
+      }
+      return true;
+    }
+
+    function calcularPrimos() {
+      const val = parseInt(document.getElementById("numeroInput").value);
+      const contenedor = document.getElementById("resultado");
+      
+      if (isNaN(val) || val < 1) {
+        contenedor.innerHTML = "<p style='color: red;'>Por favor, introduce un número entero mayor o igual a 1.</p>";
+        return;
+      }
+
+      const primos = [];
+
+      if (val >= 1) {
+        primos.push(1);
+      }
+
+      for (let i = 2; i <= val; i++) {
+        if (esPrimo(i)) {
+          primos.push(i);
+        }
+      }
+
+      
+      if (primos.length > 0) {
+        let tablaHTML = "<table><tr>";
+        primos.forEach(primo => {
+          tablaHTML += `<td>${primo}</td>`;
+        });
+        tablaHTML += "</tr></table>";
+        contenedor.innerHTML = tablaHTML;
+      } else {
+        contenedor.innerHTML = "<p>No hay resultados en ese rango.</p>";
+      }
+    }
+  </script>
+</body>
+</html>

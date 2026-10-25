@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traductor de Código Morse</title>
+
+</head>
+<body>
+  <h1>Traductor de Texto / Código Morse</h1>
+  <div id="salida" class="resultado"></div>
+
+  <script>
+
+    const morseMap = {
+      'A': '.-',    'B': '-...',  'C': '-.-.',  'D': '-..',   'E': '.',
+      'F': '..-.',  'G': '--.',   'H': '....',  'I': '..',    'J': '.---',
+      'K': '-.-',   'L': '.-..',  'M': '--',    'N': '-.',    'Ñ': '--.--',
+      'O': '---',   'P': '.--.',  'Q': '--.-',  'R': '.-.',   'S': '...',
+      'T': '-',     'U': '..-',   'V': '...-',  'W': '.--',   'X': '-..-',
+      'Y': '-.--',  'Z': '--..',  '0': '-----', '1': '.----', '2': '..---',
+      '3': '...--', '4': '....-', '5': '.....', '6': '-....', '7': '--...',
+      '8': '---..', '9': '----.', '.': '.-.-.-', ',': '--..--', '?': '..--..',
+      '"': '.-..-.', '!': '-.-.--', '/': '-..-.', '(': '-.--.', ')': '-.--.-',
+      '&': '.-...', ':': '---...', ';': '-.-.-.', '=': '-...-', '+': '.-.-.',
+      '-': '-....-', '_': '..--.-', '$': '...-..-', '@': '.--.-.'
+    };
+
+    const textoMap = {};
+    for (let letra in morseMap) {
+      textoMap[morseMap[letra]] = letra;
+    }
+
+ 
+    function normalizarMorse(input) {
+      return input.replace(/—/g, '-');
+    }
+
+    function esMorse(input) {
+
+      return /^[.\-—\s]+$/.test(input.trim());
+    }
+
+    function textoAMorse(texto) {
+      return texto
+        .toUpperCase()
+        .split(' ')
+        .map(palabra => 
+          palabra.split('').map(char => morseMap[char] || char).join(' ')
+        )
+        .join('  '); 
+    }
+
+    function morseATexto(morse) {
+      const morseLimpio = normalizarMorse(morse);
+      return morseLimpio
+        .split('  ')
+        .map(palabra => 
+          palabra.split(' ').map(simbolo => textoMap[simbolo] || simbolo).join('')
+        )
+        .join(' ');
+    }
+
+    
+    const entrada = prompt("Introduce el texto en español o en código morse (usa . y - ó —):");
+
+    if (entrada) {
+      let resultado = "";
+      if (esMorse(entrada)) {
+        resultado = `<strong>Morse detectado. Traducido a Texto:</strong><br>${morseATexto(entrada)}`;
+      } else {
+        resultado = `<strong>Texto detectado. Traducido a Morse:</strong><br>${textoAMorse(entrada)}`;
+      }
+      document.getElementById("salida").innerHTML = resultado;
+    } else {
+      document.getElementById("salida").innerText = "No se ha introducido ningún dato.";
+    }
+  </script>
+</body>
+</html>
