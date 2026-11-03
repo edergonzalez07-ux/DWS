@@ -24,23 +24,11 @@ class FAcademy extends Monoplaza
         string $nacionalidad,
         int $numeroMonoplaza,
         string $escuderia,
-        int|string $quintoArg = 0,
-        mixed $sextoArg = null,
-        ?int $puntos = null
+        int $potenciaMaximaCV,
+        int $puntos = 0
     ) {
-        if ($puntos !== null) {
-            $puntosFinal = $puntos;
-            $potencia = is_int($quintoArg) ? $quintoArg : (int) ($sextoArg ?? 0);
-        } elseif ($sextoArg !== null) {
-            $puntosFinal = (int) $quintoArg;
-            $potencia = (int) $sextoArg;
-        } else {
-            $puntosFinal = 0;
-            $potencia = (int) $quintoArg;
-        }
-
-        parent::__construct($nombrePiloto, $nacionalidad, $numeroMonoplaza, $escuderia, $puntosFinal);
-        $this->potenciaMaximaCV = $potencia;
+        parent::__construct($nombrePiloto, $nacionalidad, $numeroMonoplaza, $escuderia, $puntos);
+        $this->potenciaMaximaCV = $potenciaMaximaCV;
     }
 
     public function getPotenciaMaximaCV(): int
@@ -48,17 +36,19 @@ class FAcademy extends Monoplaza
         return $this->potenciaMaximaCV;
     }
 
-    public function subirCategoria(...$args): Monoplaza
+    public function subirCategoria(string|bool|null $datoAdicional = null): Monoplaza
     {
-        $paisCategoria = $args[0] ?? 'España';
+        if (!is_string($datoAdicional) || trim($datoAdicional) === '') {
+            throw new InvalidArgumentException('Indica el país de la categoría F4.');
+        }
 
         return new F4(
             $this->nombrePiloto,
             $this->nacionalidad,
             $this->numeroMonoplaza,
             $this->escuderia,
-            $this->puntos,
-            $paisCategoria
+            $datoAdicional,
+            $this->puntos
         );
     }
 }

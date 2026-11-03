@@ -23,23 +23,11 @@ class F3 extends Monoplaza
         string $nacionalidad,
         int $numeroMonoplaza,
         string $escuderia,
-        int|string $quintoArg = 0,
-        mixed $sextoArg = null,
-        ?int $puntos = null
+        string $academia,
+        int $puntos = 0
     ) {
-        if ($puntos !== null) {
-            $puntosFinal = $puntos;
-            $academiaFinal = is_string($quintoArg) ? $quintoArg : (string) ($sextoArg ?? '');
-        } elseif (is_string($quintoArg) || $sextoArg !== null) {
-            $puntosFinal = is_string($quintoArg) ? 0 : (int) $quintoArg;
-            $academiaFinal = is_string($quintoArg) ? $quintoArg : (string) ($sextoArg ?? '');
-        } else {
-            $puntosFinal = 0;
-            $academiaFinal = (string) $quintoArg;
-        }
-
-        parent::__construct($nombrePiloto, $nacionalidad, $numeroMonoplaza, $escuderia, $puntosFinal);
-        $this->academia = $academiaFinal;
+        parent::__construct($nombrePiloto, $nacionalidad, $numeroMonoplaza, $escuderia, $puntos);
+        $this->academia = $academia;
     }
 
     public function getAcademia(): string
@@ -47,17 +35,19 @@ class F3 extends Monoplaza
         return $this->academia;
     }
 
-    public function subirCategoria(...$args): Monoplaza
+    public function subirCategoria(string|bool|null $datoAdicional = null): Monoplaza
     {
-        $superlicencia = $args[0] ?? false;
+        if (!is_bool($datoAdicional)) {
+            throw new InvalidArgumentException('Indica si el piloto tiene los puntos necesarios de superlicencia.');
+        }
 
         return new F2(
             $this->nombrePiloto,
             $this->nacionalidad,
             $this->numeroMonoplaza,
             $this->escuderia,
-            $this->puntos,
-            $superlicencia
+            $datoAdicional,
+            $this->puntos
         );
     }
 }

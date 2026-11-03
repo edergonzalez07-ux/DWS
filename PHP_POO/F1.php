@@ -25,23 +25,11 @@ class F1 extends Monoplaza
         string $nacionalidad,
         int $numeroMonoplaza,
         string $escuderia,
-        int|string $quintoArg = 0,
-        mixed $sextoArg = null,
-        ?int $puntos = null
+        string $patrocinadorPrincipal,
+        int $puntos = 0
     ) {
-        if ($puntos !== null) {
-            $puntosFinal = $puntos;
-            $patrocinador = is_string($quintoArg) ? $quintoArg : (string) ($sextoArg ?? '');
-        } elseif (is_string($quintoArg) || $sextoArg !== null) {
-            $puntosFinal = is_string($quintoArg) ? 0 : (int) $quintoArg;
-            $patrocinador = is_string($quintoArg) ? $quintoArg : (string) ($sextoArg ?? '');
-        } else {
-            $puntosFinal = 0;
-            $patrocinador = (string) $quintoArg;
-        }
-
-        parent::__construct($nombrePiloto, $nacionalidad, $numeroMonoplaza, $escuderia, $puntosFinal);
-        $this->patrocinadorPrincipal = $patrocinador;
+        parent::__construct($nombrePiloto, $nacionalidad, $numeroMonoplaza, $escuderia, $puntos);
+        $this->patrocinadorPrincipal = $patrocinadorPrincipal;
     }
 
     public function getPatrocinadorPrincipal(): string
@@ -49,7 +37,7 @@ class F1 extends Monoplaza
         return $this->patrocinadorPrincipal;
     }
 
-    public function subirCategoria(...$args): Monoplaza
+    public function subirCategoria(string|bool|null $datoAdicional = null): Monoplaza
     {
         throw new BadMethodCallException('La Fórmula 1 es la máxima categoría del ejercicio.');
     }

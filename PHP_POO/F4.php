@@ -24,23 +24,11 @@ class F4 extends Monoplaza
         string $nacionalidad,
         int $numeroMonoplaza,
         string $escuderia,
-        int|string $quintoArg = 0,
-        mixed $sextoArg = null,
-        ?int $puntos = null
+        string $paisCategoria,
+        int $puntos = 0
     ) {
-        if ($puntos !== null) {
-            $puntosFinal = $puntos;
-            $pais = is_string($quintoArg) ? $quintoArg : (string) ($sextoArg ?? '');
-        } elseif (is_string($quintoArg) || $sextoArg !== null) {
-            $puntosFinal = is_string($quintoArg) ? 0 : (int) $quintoArg;
-            $pais = is_string($quintoArg) ? $quintoArg : (string) ($sextoArg ?? '');
-        } else {
-            $puntosFinal = 0;
-            $pais = (string) $quintoArg;
-        }
-
-        parent::__construct($nombrePiloto, $nacionalidad, $numeroMonoplaza, $escuderia, $puntosFinal);
-        $this->paisCategoria = $pais;
+        parent::__construct($nombrePiloto, $nacionalidad, $numeroMonoplaza, $escuderia, $puntos);
+        $this->paisCategoria = $paisCategoria;
     }
 
     public function getPaisCategoria(): string
@@ -48,16 +36,18 @@ class F4 extends Monoplaza
         return $this->paisCategoria;
     }
 
-    public function subirCategoria(...$args): Monoplaza
+    public function subirCategoria(string|bool|null $datoAdicional = null): Monoplaza
     {
-        $academia = $args[0] ?? 'Academia';
+        if (!is_string($datoAdicional) || trim($datoAdicional) === '') {
+            throw new InvalidArgumentException('Indica la academia a la que pertenece el piloto.');
+        }
 
         return new F3(
             $this->nombrePiloto,
             $this->nacionalidad,
             $this->numeroMonoplaza,
             $this->escuderia,
-            $this->puntos,
-            $academia
+            $datoAdicional,
+            $this->puntos
         );
     }}

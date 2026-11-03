@@ -24,23 +24,11 @@ class F2 extends Monoplaza
         string $nacionalidad,
         int $numeroMonoplaza,
         string $escuderia,
-        int|bool $quintoArg = 0,
-        mixed $sextoArg = null,
-        ?int $puntos = null
+        bool $superlicencia,
+        int $puntos = 0
     ) {
-        if ($puntos !== null) {
-            $puntosFinal = $puntos;
-            $licencia = is_bool($quintoArg) ? $quintoArg : (bool) ($sextoArg ?? false);
-        } elseif (is_bool($quintoArg) || $sextoArg !== null) {
-            $puntosFinal = is_bool($quintoArg) ? 0 : (int) $quintoArg;
-            $licencia = is_bool($quintoArg) ? $quintoArg : (bool) ($sextoArg ?? false);
-        } else {
-            $puntosFinal = 0;
-            $licencia = (bool) $quintoArg;
-        }
-
-        parent::__construct($nombrePiloto, $nacionalidad, $numeroMonoplaza, $escuderia, $puntosFinal);
-        $this->superlicencia = $licencia;
+        parent::__construct($nombrePiloto, $nacionalidad, $numeroMonoplaza, $escuderia, $puntos);
+        $this->superlicencia = $superlicencia;
     }
 
     public function tieneSuperlicencia(): bool
@@ -48,17 +36,22 @@ class F2 extends Monoplaza
         return $this->superlicencia;
     }
 
-    public function subirCategoria(...$args): Monoplaza
+    public function subirCategoria(string|bool|null $datoAdicional = null): Monoplaza
     {
-        $patrocinador = $args[0] ?? 'Patrocinador principal';
+        if (!$this->superlicencia) {
+            throw new DomainException('El piloto no tiene los puntos necesarios de superlicencia para subir a F1.');
+        }
+        if (!is_string($datoAdicional) || trim($datoAdicional) === '') {
+            throw new InvalidArgumentException('Indica el patrocinador principal para crear el monoplaza de F1.');
+        }
 
         return new F1(
             $this->nombrePiloto,
             $this->nacionalidad,
             $this->numeroMonoplaza,
             $this->escuderia,
-            $this->puntos,
-            $patrocinador
+            $datoAdicional,
+            $this->puntos
         );
     }
 }

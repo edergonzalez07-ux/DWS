@@ -86,7 +86,7 @@ abstract class Monoplaza
         $this->puntos += $total;
     }
 
-    public function subirCategoria(...$args): Monoplaza
+    public function subirCategoria(string|bool|null $datoAdicional = null): Monoplaza
     {
         throw new BadMethodCallException('La categoría actual no tiene una categoría superior definida.');
     }
